@@ -5,7 +5,6 @@ import 'package:recook/viewmodels/recipe_viewmodel.dart';
 import 'package:recook/viewmodels/search_viewmodel.dart';
 import 'package:recook/widgets/navbar.dart';
 import 'package:recook/widgets/search_bar.dart';
-import 'package:recook/widgets/loading_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class SearchPage extends StatelessWidget {
@@ -49,7 +48,7 @@ class _SearchPageContentState extends State<SearchPageContent> {
             onSearch: (keyword) => _performSearch(keyword, searchViewModel),
           ),
           searchViewModel.isLoading
-              ? LoadingIndicator()
+              ? CircularProgressIndicator()
               : Expanded(
                   child: ListView.builder(
                   itemCount: searchViewModel.searchResults.length,
@@ -70,7 +69,7 @@ class _SearchPageContentState extends State<SearchPageContent> {
                             Icons
                                 .account_circle, // Anda dapat mengganti ikon ini dengan ikon profil yang sesuai
                             size:
-                                48, // Sesuaikan dengan ukuran yang Anda inginkan
+                                48,
                           );
                         },
                       ),

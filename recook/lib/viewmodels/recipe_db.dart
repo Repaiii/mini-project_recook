@@ -20,7 +20,7 @@ class RecipeRepository {
       version: 1,
       onCreate: (db, version) {
         db.execute(
-          "CREATE TABLE recipes(id INTEGER PRIMARY KEY, key TEXT, title TEXT, imageUrl TEXT)",
+          "CREATE TABLE recipes(id INTEGER PRIMARY KEY, key TEXT, title TEXT, imageUrl TEXT, cookingTime TEXT, difficulty TEXT, description TEXT, ingredients TEXT, steps TEXT)",
         );
       },
     );
@@ -28,12 +28,13 @@ class RecipeRepository {
   }
 
   Future<Recipe> addSavedRecipe(Recipe recipe) async {
-  final db = await database;
-  final recipeMap = recipe.toMap();
-  final id = await db.insert('recipes', recipeMap);
-  return recipe.copyWith(id: id);
-}
-
+    final db = await database;
+    final recipeMap = recipe.toMap();
+    print('=> $recipeMap');
+    final id = await db.insert('recipes', {...recipeMap, 'ingredients': recipeMap['ingredients'].toString(), 'steps': recipeMap['steps'].toString()});
+    print('=> $id');
+    return recipe.copyWith(id: id);
+  }
 
   Future<void> removeSavedRecipe(int id) async {
     final db = await database;

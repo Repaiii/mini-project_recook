@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:recook/services/ai_request_provider.dart';
+import 'package:recook/services/chat_controller_provider.dart';
 import 'package:recook/services/recipe_services.dart';
 import 'package:provider/provider.dart';
 import 'package:recook/widgets/navbar.dart';
 import 'package:recook/widgets/message_tile.dart';
-import 'package:recook/widgets/loading_indicator.dart';
 
 class AiPage extends StatelessWidget {
   final TextEditingController _chatController = TextEditingController();
@@ -14,6 +14,7 @@ class AiPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final aiRequestProvider = Provider.of<AiRequestProvider>(context);
     final chatMessages = Provider.of<List<String>>(context);
+    final chatMessageProvider = Provider.of<ChatMessageProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -47,7 +48,7 @@ class AiPage extends StatelessWidget {
                     },
                   ),
                   if (aiRequestProvider.isLoading)
-                    LoadingIndicator(), // Let's use LoadingIndicator directly
+                   Center(child: CircularProgressIndicator(),)
                 ],
               ),
             ),
@@ -77,6 +78,7 @@ class AiPage extends StatelessWidget {
                       String aiResponse = response['choices'][0]['text'];
                       if (aiResponse.trim().isNotEmpty) {
                         chatMessages.add('$aiResponse');
+                        chatMessageProvider.updateChatMessage(message);
                       }
                     }
 

@@ -14,7 +14,7 @@ class HomePage extends StatelessWidget {
       length: 2,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Beranda'),
+          title: Text('Recook!'),
           bottom: TabBar(
             tabs: [
               Tab(text: 'Pencarian'),
@@ -65,12 +65,35 @@ class SavedRecipesWidget extends StatelessWidget {
               final savedRecipe = savedRecipes[index];
               return RoundedCardWithRecipe(
                 savedRecipe: savedRecipe,
-                child: ListTile(
+                child: ExpansionTile(
                   title: Text(savedRecipe.title),
-                  onTap: () {
-                    // Navigasi kembali ke RecipePage sesuai dengan recipe key
-                    Navigator.pushNamed(context, '/recipe/${savedRecipe.key}');
-                  },
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Cooking Time: ${savedRecipe.cookingTime}'),
+                          Text('Difficulty: ${savedRecipe.difficulty}'),
+                          Text('Description: ${savedRecipe.description}'),
+                          Text('Ingredients:'),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: savedRecipe.ingredients.map((ingredient) {
+                              return Text('- $ingredient');
+                            }).toList(),
+                          ),
+                          Text('Steps:'),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: savedRecipe.steps.map((step) {
+                              return Text('- $step');
+                            }).toList(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 ),
               );
             },
@@ -83,12 +106,11 @@ class SavedRecipesWidget extends StatelessWidget {
   }
 }
 
-
 class SavedMessagesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Consumer2<SavedMessagesProvider, ChatControllerProvider>(
-      builder: (context, savedMessagesProvider, chatControllerProvider, child) {
+    return Consumer2<SavedMessagesProvider, ChatMessageProvider>(
+      builder: (context, savedMessagesProvider, chatMessageProvider, child) {
         return ListView.builder(
           itemCount: savedMessagesProvider.savedMessages.length,
           itemBuilder: (context, index) {
@@ -97,7 +119,7 @@ class SavedMessagesWidget extends StatelessWidget {
               child: ExpansionTile(
                 title: DefaultTextStyle(
                   style: TextStyle(color: Colors.white),
-                  child: Text('Pesan AI yang disimpan: ${chatControllerProvider.chatController.text}'),
+                  child: Text('Pesan AI yang disimpan: ${chatMessageProvider.chatMessage}'),
                 ),
                 children: [
                   Padding(

@@ -8,7 +8,7 @@ class RecipeRecommendationService {
       _dio.options = BaseOptions(
         baseUrl: 'https://api.openai.com/v1/',
         headers: {
-          'Authorization': 'Bearer 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', // Gantilah dengan API key yang sesuai
+          'Authorization': 'Bearer apikey', // Gantilah dengan API key yang sesuai
         },
       );
 

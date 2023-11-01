@@ -42,7 +42,7 @@ class _RecipePageContentState extends State<RecipePageContent> {
         actions: [
           Consumer<RecipeDetailViewModel>(
             builder: (context, model, child) {
-              return SaveRecipeButton(recipeDetailViewModel: model);
+              return SaveRecipeButton(recipeDetailViewModel: model, recipeDetailKey: widget.recipeKey,);
             },
           )
         ],

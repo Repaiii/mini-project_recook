@@ -19,8 +19,8 @@ void main() {
         ChangeNotifierProvider<RecipeDetailViewModel>(create: (_) => RecipeDetailViewModel()),
         ChangeNotifierProvider<SavedMessagesProvider>(create: (_) => SavedMessagesProvider()),
         ChangeNotifierProvider<AiRequestProvider>(create: (_) => AiRequestProvider()),
-        ChangeNotifierProvider<ChatControllerProvider>(create: (_) => ChatControllerProvider()),
-        ChangeNotifierProvider<RefreshProvider>(create: (_) => RefreshProvider()), // Tambahkan RefreshProvider
+        ChangeNotifierProvider<ChatMessageProvider>(create: (_) => ChatMessageProvider()),
+        ChangeNotifierProvider<RefreshProvider>(create: (_) => RefreshProvider()),
       ],
       child: RecookApp(),
     ),
