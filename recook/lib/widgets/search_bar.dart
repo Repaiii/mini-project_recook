@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:recook/services/textfield_validator_provider.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final TextEditingController controller;
@@ -18,17 +20,25 @@ class CustomSearchBar extends StatelessWidget {
         child: Row(
           children: <Widget>[
             Expanded(
-              child: TextField(
-                controller: controller,
-                decoration: InputDecoration(
-                  hintText: 'Hari ini masak apa ya...',
-                ),
+              child: Consumer<TextFieldValidationProvider>(
+                builder: (context, textFieldValidationProvider, child) {
+                  return TextField(
+                    controller: controller,
+                    decoration: InputDecoration(
+                      hintText: 'Hari ini masak apa ya...',
+                      errorText: textFieldValidationProvider.errorMessage,
+                    ),
+                  );
+                },
               ),
             ),
             IconButton(
               icon: Icon(Icons.search),
               onPressed: () {
-                onSearch(controller.text);
+                final textFieldValidationProvider = Provider.of<TextFieldValidationProvider>(context, listen: false);
+                if (textFieldValidationProvider.validateTextField(controller.text)) {
+                  onSearch(controller.text);
+                }
               },
             ),
           ],
@@ -37,4 +47,3 @@ class CustomSearchBar extends StatelessWidget {
     );
   }
 }
-

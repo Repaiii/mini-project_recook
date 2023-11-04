@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 // Warna-warna yang digunakan dalam tema
-final Color primaryColor = Color(0xFFB30000); // Contoh warna merah yang lebih gelap
+final Color primaryColor = Color.fromRGBO(122, 135, 39, 1); // Contoh warna merah yang lebih gelap
 final Color secondaryColor = Colors.white; // Warna putih sebagai sekunder
-final Color accentColor = Colors.black; // Warna hitam sebagai aksen tambahan
+final Color accentColor = Color.fromRGBO(68, 77, 30, 1); // Warna hitam sebagai aksen tambahan
 
 // Font yang digunakan dalam tema
 final String appFontFamily = 'Montserrat'; // Font Montserrat sebagai font utama

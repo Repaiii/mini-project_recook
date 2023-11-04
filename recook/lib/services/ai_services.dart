@@ -8,7 +8,7 @@ class RecipeRecommendationService {
       _dio.options = BaseOptions(
         baseUrl: 'https://api.openai.com/v1/',
         headers: {
-          'Authorization': 'Bearer apikey', // Gantilah dengan API key yang sesuai
+          'Authorization': 'Bearer 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', // Gantilah dengan API key yang sesuai
         },
       );
 
@@ -16,7 +16,7 @@ class RecipeRecommendationService {
         'completions',
         data: {
           "model": "text-davinci-003",
-          "prompt": "Kamu adalah seorang ahli dalam bidang kuliner dan resep masakan, kamu akan ditanyai hal seputar kuliner, resep makanan, dan tips mengolah bahan makanan. $prompt . Coba kamu sebutkan nama masakannya kemudian jelaskan bahan-bahan, langkah-langkah, waktu yang diperlukan, hingga tingkat kesulitan dari masakan tersebut. Namun, jika kamu ditanyai tentang tips mengolah makanan, kamu dapat mengabaikan aturan sebelumnya dan menjelaskan tips yang ditanyakan", // Menambahkan ide bahwa AI adalah ahli kuliner
+          "prompt": "Kamu adalah seorang ahli dalam bidang kuliner dan resep masakan, kamu akan ditanyai hal seputar kuliner, resep makanan, dan tips mengolah bahan makanan. $prompt . Coba kamu sebutkan nama masakannya kemudian jelaskan bahan-bahan, langkah-langkah, waktu yang diperlukan, tingkat kesulitan dari masakan tersebut. Namun, jika kamu ditanyai tentang tips mengolah makanan, kamu dapat mengabaikan aturan sebelumnya dan menjelaskan tips yang ditanyakan", // Menambahkan ide bahwa AI adalah ahli kuliner
           "temperature": 0.4,
           "max_tokens": 900,
           "top_p": 1,

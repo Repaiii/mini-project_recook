@@ -7,89 +7,103 @@ import 'package:provider/provider.dart';
 import 'package:recook/viewmodels/recipe_viewmodel.dart';
 
 class RoundedCardWithRecipe extends StatelessWidget {
-  final Widget child;
-  final Function()? onTap;
   final Recipe savedRecipe;
+  final Function()? onTap;
 
-  RoundedCardWithRecipe(
-      {required this.child, this.onTap, required this.savedRecipe});
+  RoundedCardWithRecipe({
+    required this.savedRecipe,
+    this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: onTap,
-      child: Card(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(16.0),
+      child: Dismissible(
+        key: Key(savedRecipe.id.toString()), // Gunakan id sebagai key
+        background: Container(
+          color: accentColor,
+          alignment: Alignment.centerRight,
+          padding: EdgeInsets.only(right: 16),
+          child: Icon(
+            Icons.delete,
+            color: Colors.white,
+          ),
         ),
-        color: primaryColor, // Ganti warna sesuai dengan tema Anda
-        child: Stack(
-          children: [
-            // Menampilkan gambar latar belakang dari data resep yang sudah disimpan
-            CachedNetworkImage(
-              imageUrl: savedRecipe.imageUrl,
-              placeholder: (context, url) => CircularProgressIndicator(),
-              errorWidget: (context, url, error) {
-                return Center(
+        direction: DismissDirection.endToStart,
+        onDismissed: (direction) {
+          if (direction == DismissDirection.endToStart) {
+            final recipeId = savedRecipe.id;
+            if (recipeId != null) {
+              final recipeDetailViewModel =
+                  Provider.of<RecipeDetailViewModel>(context, listen: false);
+              recipeDetailViewModel.removeSavedRecipe(recipeId);
+              // Dapatkan provider untuk mengakses RefreshProvider
+              final refreshProvider =
+                  Provider.of<RefreshProvider>(context, listen: false);
+              // Mulai refreshing
+              refreshProvider.startRefreshing();
+            }
+          }
+        },
+        child: Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16.0),
+          ),
+          child: Stack(
+            children: [
+              CachedNetworkImage(
+                imageUrl: savedRecipe.imageUrl,
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Center(
                   child: Icon(
                     Icons.error,
-                    color: Colors.white,
+                    color: primaryColor,
                   ),
-                );
-              },
-            ),
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: DefaultTextStyle(
-                style: TextStyle(
-                    color: Colors.white), // Mengatur warna teks menjadi putih
-                child: Dismissible(
-                  key: Key(savedRecipe.id.toString()), // Gunakan id sebagai key
-                  background: Container(
-                    color: Colors.red,
-                    alignment: Alignment.centerRight,
-                    padding: EdgeInsets.only(right: 16),
-                    child: Icon(
-                      Icons.delete,
-                      color: Colors.white,
-                    ),
-                  ),
-                  direction: DismissDirection.endToStart,
-                  onDismissed: (direction) {
-                    if (direction == DismissDirection.endToStart) {
-                      final recipeId = savedRecipe.id;
-                      if (recipeId != null) {
-                        final recipeDetailViewModel =
-                            Provider.of<RecipeDetailViewModel>(context,
-                                listen: false);
-                        recipeDetailViewModel.removeSavedRecipe(recipeId);
-                        // Dapatkan provider untuk mengakses RefreshProvider
-                        final refreshProvider = Provider.of<RefreshProvider>(
-                            context,
-                            listen: false);
-
-                        // Mulai refreshing
-                        refreshProvider.startRefreshing();
-                      }
-                    }
-                  },
-                  child: child,
                 ),
               ),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: DefaultTextStyle(
+                  style: TextStyle(color: Colors.white),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        savedRecipe.title,
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                          shadows: [
+                            Shadow(
+                              color: Colors.black,
+                              offset: Offset(2, 2),
+                              blurRadius: 3,
+                            ),
+                          ],
+                        ),
+                      ),
+                      // Tambahkan info tambahan lain di sini jika diperlukan
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class RoundedCardWithoutRecipe extends StatelessWidget {
+
+class RoundedCardAi extends StatelessWidget {
   final Widget child;
   final Function()? onTap;
   final Function()? onDismissed; // Fungsi yang akan dipanggil saat di-dismiss
 
-  RoundedCardWithoutRecipe({required this.child, this.onTap, this.onDismissed});
+  RoundedCardAi({required this.child, this.onTap, this.onDismissed});
 
   @override
   Widget build(BuildContext context) {
@@ -102,7 +116,7 @@ class RoundedCardWithoutRecipe extends StatelessWidget {
         }
       },
       background: Container(
-        color: Colors.red, // Warna latar belakang saat di-swipe
+        color: accentColor, // Warna latar belakang saat di-swipe
         alignment: Alignment.centerRight,
         padding: EdgeInsets.only(right: 16),
         child: Icon(
@@ -110,14 +124,15 @@ class RoundedCardWithoutRecipe extends StatelessWidget {
           color: Colors.white,
         ),
       ),
-      direction: DismissDirection.endToStart, // Swipe dari kiri ke kanan untuk menghapus
+      direction: DismissDirection
+          .endToStart, // Swipe dari kiri ke kanan untuk menghapus
       child: InkWell(
         onTap: onTap,
         child: Card(
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(16.0),
           ),
-          color: primaryColor, // Ganti warna sesuai dengan tema Anda
+          color: accentColor, // Ganti warna sesuai dengan tema Anda accentColor
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: child,

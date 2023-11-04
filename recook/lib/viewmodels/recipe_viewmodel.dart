@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
 import 'package:recook/models/recipe.dart';
-import 'package:recook/viewmodels/recipe_db.dart';
+import 'package:recook/models/recipe_db.dart';
 
 class RecipeDetailViewModel with ChangeNotifier {
   final Dio _dio = Dio();
@@ -34,51 +34,47 @@ class RecipeDetailViewModel with ChangeNotifier {
   }
 
   Future<void> toggleSaveRecipe(String recipeDetailKey) async {
-
   if (_recipeDetail != null) {
     final recipeKey = _recipeDetail!['key'] ?? recipeDetailKey;
     final recipeTitle = _recipeDetail!['results']['title'] ?? '';
     final recipeImageUrl = _recipeDetail!['results']['image'] ?? '';
-    final recipeCookingTime = _recipeDetail!['results']['times'] ?? '';
-    final recipeDifficulty = _recipeDetail!['results']['difficulty'] ?? '';
-    final recipeDescription = _recipeDetail!['results']['description'] ?? '';
-    final recipeIngredients = _recipeDetail!['results']['ingredient'] as List<dynamic>? ?? [];
-    final recipeSteps = _recipeDetail!['results']['step'] as List<dynamic>? ?? [];
 
     final recipe = Recipe(
-      id: 0, 
       key: recipeKey,
       title: recipeTitle,
       imageUrl: recipeImageUrl,
-      cookingTime: recipeCookingTime,
-      difficulty: recipeDifficulty,
-      description: recipeDescription,
-      ingredients: List<String>.from(recipeIngredients) ,
-      steps: List<String>.from(recipeSteps) ,
     );
 
-  if (isRecipeSaved(recipe)) {
-  final removedId = (recipe.id); // Menggunakan ID untuk menghapus resep
-  await _repository.removeSavedRecipe(removedId!);
-  _savedRecipes.removeWhere((recipe) => recipe.id == removedId);
-} else {
-  final savedRecipe = await _repository.addSavedRecipe(recipe);
-  _savedRecipes.add(savedRecipe);
-}
+    // Periksa apakah resep dengan recipeKey yang sama sudah ada dalam _savedRecipes
+    final existingRecipe = _savedRecipes.firstWhere(
+      (r) => r.key == recipe.key,
+      orElse: () => Recipe(id: null, key: '', title: '', imageUrl: ''),
+    );
+
+    if (isRecipeSaved(recipe)) {
+      if (existingRecipe.id != null) {
+        await _repository.removeSavedRecipe(existingRecipe.id!);
+        _savedRecipes.removeWhere((r) => r.id == existingRecipe.id);
+      }
+    } else {
+      if (existingRecipe.id == null) {
+        final savedRecipe = await _repository.addSavedRecipe(recipe);
+        _savedRecipes.add(savedRecipe);
+      }
+    }
 
     // Print data yang disimpan ke dalam console
     print('Data yang disimpan:');
     for (var savedRecipe in _savedRecipes) {
-      print('Key: ${savedRecipe.key}, Title: ${savedRecipe.title}, Image: ${savedRecipe.imageUrl}, Cooking Time: ${savedRecipe.cookingTime}, Difficulty: ${savedRecipe.difficulty}, Description: ${savedRecipe.description}, Ingredients: ${savedRecipe.ingredients}, Steps: ${savedRecipe.steps}');
+      print('Key: ${savedRecipe.key}, Title: ${savedRecipe.title}, Image: ${savedRecipe.imageUrl}');
     }
   } else {
     print('_recipeDetail is null');
   }
 
-  await Future.microtask(() {
-    notifyListeners();
-  });
+  notifyListeners();
 }
+
 
   Future<List<Recipe>> getSavedRecipes() async {
     final savedRecipes = await _repository.getSavedRecipes();

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:recook/view/recipe_page.dart';
 import 'package:recook/viewmodels/recipe_viewmodel.dart';
 import 'package:recook/viewmodels/search_viewmodel.dart';
 import 'package:recook/widgets/navbar.dart';
 import 'package:recook/widgets/search_bar.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:provider/provider.dart';
 
 class SearchPage extends StatelessWidget {
   @override
@@ -17,24 +17,10 @@ class SearchPage extends StatelessWidget {
   }
 }
 
-class SearchPageContent extends StatefulWidget {
-  @override
-  _SearchPageContentState createState() => _SearchPageContentState();
-}
-
-class _SearchPageContentState extends State<SearchPageContent> {
-  final TextEditingController _searchController = TextEditingController();
-
-  void _performSearch(String keyword, SearchViewModel searchViewModel) {
-    if (keyword.isNotEmpty) {
-      searchViewModel.searchRecipes(keyword);
-    }
-  }
-
+class SearchPageContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    final searchViewModel = Provider.of<SearchViewModel>(context);
-    final recipeDetailViewModel = Provider.of<RecipeDetailViewModel>(context);
+    final TextEditingController _searchController = TextEditingController();
 
     return Scaffold(
       appBar: AppBar(
@@ -44,13 +30,36 @@ class _SearchPageContentState extends State<SearchPageContent> {
       body: Column(
         children: <Widget>[
           CustomSearchBar(
-            controller: _searchController,
-            onSearch: (keyword) => _performSearch(keyword, searchViewModel),
+  controller: _searchController,
+  onSearch: (keyword) {
+    final searchViewModel =
+        Provider.of<SearchViewModel>(context, listen: false);
+
+    // Set isLoading menjadi true saat pencarian dimulai
+    searchViewModel.startLoading();
+
+    searchViewModel.searchRecipes(keyword).then((_) {
+      // Set isLoading menjadi false saat pencarian selesai
+      searchViewModel.stopLoading();
+    });
+  },
+),
+
+          Consumer<SearchViewModel>(
+            builder: (context, searchViewModel, child) {
+              if (searchViewModel.isLoading) {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              } else {
+                return SizedBox();
+              }
+            },
           ),
-          searchViewModel.isLoading
-              ? CircularProgressIndicator()
-              : Expanded(
-                  child: ListView.builder(
+          Consumer<SearchViewModel>(
+            builder: (context, searchViewModel, child) {
+              return Expanded(
+                child: ListView.builder(
                   itemCount: searchViewModel.searchResults.length,
                   itemBuilder: (context, index) {
                     final item = searchViewModel.searchResults[index];
@@ -58,27 +67,24 @@ class _SearchPageContentState extends State<SearchPageContent> {
                     return ListTile(
                       title: Text(item['title']),
                       subtitle: Text(
-                          'Waktu: ${item['times']} - Kesulitan: ${item['difficulty']}'),
+                        'Waktu: ${item['times']} - Kesulitan: ${item['difficulty']}',
+                      ),
                       leading: CachedNetworkImage(
                         imageUrl: item['img'],
                         placeholder: (context, url) =>
                             CircularProgressIndicator(),
                         errorWidget: (context, url, error) {
-                          // Tampilkan gambar profil sebagai gantinya
                           return Icon(
-                            Icons
-                                .account_circle, // Anda dapat mengganti ikon ini dengan ikon profil yang sesuai
-                            size:
-                                48,
+                            Icons.account_circle,
+                            size: 48,
                           );
                         },
                       ),
-
-                      // Ketika item di klik, navigasi ke halaman detail resep
                       onTap: () {
-                        // Ambil kunci resep dari item yang diklik
+                        final recipeDetailViewModel =
+                            Provider.of<RecipeDetailViewModel>(context,
+                                listen: false);
                         recipeDetailViewModel.fetchRecipeDetail(recipeKey);
-                        // Navigasi ke halaman detail resep dengan menyertakan recipeKey
                         Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => ChangeNotifierProvider(
@@ -90,7 +96,10 @@ class _SearchPageContentState extends State<SearchPageContent> {
                       },
                     );
                   },
-                )),
+                ),
+              );
+            },
+          ),
         ],
       ),
       bottomNavigationBar: CustomBottomNavigationBar(

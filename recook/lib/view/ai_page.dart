@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:recook/services/ai_request_provider.dart';
 import 'package:recook/services/chat_controller_provider.dart';
-import 'package:recook/services/recipe_services.dart';
+import 'package:recook/services/ai_services.dart';
 import 'package:provider/provider.dart';
+import 'package:recook/services/textfield_validator_provider.dart';
 import 'package:recook/widgets/navbar.dart';
 import 'package:recook/widgets/message_tile.dart';
 
@@ -15,11 +16,12 @@ class AiPage extends StatelessWidget {
     final aiRequestProvider = Provider.of<AiRequestProvider>(context);
     final chatMessages = Provider.of<List<String>>(context);
     final chatMessageProvider = Provider.of<ChatMessageProvider>(context);
+    final textFieldValidationProvider = Provider.of<TextFieldValidationProvider>(context);
 
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Chat dengan AI'),
+        title: Text('Recook! AI'),
       ),
       body: Column(
         children: <Widget>[
@@ -48,7 +50,7 @@ class AiPage extends StatelessWidget {
                     },
                   ),
                   if (aiRequestProvider.isLoading)
-                   Center(child: CircularProgressIndicator(),)
+                    Center(child: CircularProgressIndicator(),)
                 ],
               ),
             ),
@@ -60,29 +62,32 @@ class AiPage extends StatelessWidget {
                 Expanded(
                   child: TextField(
                     controller: _chatController,
-                    decoration: InputDecoration(labelText: 'Chat dengan AI'),
+                    decoration: InputDecoration(labelText: 'Chat dengan AI', errorText: textFieldValidationProvider.errorMessage),
                   ),
                 ),
                 IconButton(
                   icon: Icon(Icons.send),
                   onPressed: () async {
                     String message = _chatController.text;
-                    _chatController.clear();
 
-                    aiRequestProvider.startLoading();
+                    if (textFieldValidationProvider.validateTextField(message)) {
+                      _chatController.clear();
 
-                    Map<String, dynamic>? response =
-                        await _aiService.getRecommendations(prompt: message);
+                      aiRequestProvider.startLoading();
 
-                    if (response != null) {
-                      String aiResponse = response['choices'][0]['text'];
-                      if (aiResponse.trim().isNotEmpty) {
-                        chatMessages.add('$aiResponse');
-                        chatMessageProvider.updateChatMessage(message);
+                      Map<String, dynamic>? response =
+                          await _aiService.getRecommendations(prompt: message);
+
+                      if (response != null) {
+                        String aiResponse = response['choices'][0]['text'];
+                        if (aiResponse.trim().isNotEmpty) {
+                          chatMessages.add('$aiResponse');
+                          chatMessageProvider.updateChatMessage(message);
+                        }
                       }
-                    }
 
-                    aiRequestProvider.stopLoading();
+                      aiRequestProvider.stopLoading();
+                    }
                   },
                 ),
               ],

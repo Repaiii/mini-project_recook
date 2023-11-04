@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:recook/theme.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final int selectedIndex;
@@ -21,13 +22,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.search),
-          label: 'Pencarian',
+          label: 'Cari Resep',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.chat),
           label: 'AI',
         ),
       ],
+      selectedItemColor: primaryColor,
     );
   }
 }
