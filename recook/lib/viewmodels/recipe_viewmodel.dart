@@ -45,7 +45,6 @@ class RecipeDetailViewModel with ChangeNotifier {
       imageUrl: recipeImageUrl,
     );
 
-    // Periksa apakah resep dengan recipeKey yang sama sudah ada dalam _savedRecipes
     final existingRecipe = _savedRecipes.firstWhere(
       (r) => r.key == recipe.key,
       orElse: () => Recipe(id: null, key: '', title: '', imageUrl: ''),
@@ -63,7 +62,6 @@ class RecipeDetailViewModel with ChangeNotifier {
       }
     }
 
-    // Print data yang disimpan ke dalam console
     print('Data yang disimpan:');
     for (var savedRecipe in _savedRecipes) {
       print('Key: ${savedRecipe.key}, Title: ${savedRecipe.title}, Image: ${savedRecipe.imageUrl}');
@@ -74,7 +72,6 @@ class RecipeDetailViewModel with ChangeNotifier {
 
   notifyListeners();
 }
-
 
   Future<List<Recipe>> getSavedRecipes() async {
     final savedRecipes = await _repository.getSavedRecipes();

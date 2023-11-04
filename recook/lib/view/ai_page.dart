@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:recook/services/ai_request_provider.dart';
-import 'package:recook/services/chat_controller_provider.dart';
-import 'package:recook/services/ai_services.dart';
+import 'package:recook/services/ai_service.dart';
 import 'package:provider/provider.dart';
-import 'package:recook/services/textfield_validator_provider.dart';
+import 'package:recook/viewmodels/ai_request_provider.dart';
+import 'package:recook/viewmodels/chat_controller_provider.dart';
+import 'package:recook/viewmodels/textfield_validator_provider.dart';
 import 'package:recook/widgets/navbar.dart';
 import 'package:recook/widgets/message_tile.dart';
 

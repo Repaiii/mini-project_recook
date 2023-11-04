@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:provider/provider.dart';
-import 'package:recook/services/chat_controller_provider.dart';
-import 'package:recook/services/saved_message_provider.dart';
 import 'package:recook/view/home_page.dart';
+import 'package:recook/viewmodels/chat_controller_provider.dart';
+import 'package:recook/viewmodels/saved_message_provider.dart';
 import 'package:recook/widgets/navbar.dart';
 import 'package:recook/viewmodels/recipe_viewmodel.dart';
 import 'package:recook/viewmodels/search_viewmodel.dart';

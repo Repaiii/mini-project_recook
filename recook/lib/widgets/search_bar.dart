@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:recook/services/textfield_validator_provider.dart';
+import 'package:recook/viewmodels/textfield_validator_provider.dart';
 
 class CustomSearchBar extends StatelessWidget {
   final TextEditingController controller;

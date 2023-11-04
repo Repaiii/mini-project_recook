@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:recook/services/ai_request_provider.dart';
-import 'package:recook/services/chat_controller_provider.dart';
-import 'package:recook/services/refresh_provider.dart';
-import 'package:recook/services/saved_message_provider.dart';
-import 'package:recook/services/textfield_validator_provider.dart';
 import 'package:recook/theme.dart';
 import 'package:recook/view/ai_page.dart';
 import 'package:recook/view/home_page.dart';
 import 'package:recook/view/search_page.dart';
 import 'package:recook/view/splash_screen.dart';
+import 'package:recook/viewmodels/ai_request_provider.dart';
+import 'package:recook/viewmodels/chat_controller_provider.dart';
 import 'package:recook/viewmodels/recipe_viewmodel.dart';
+import 'package:recook/viewmodels/refresh_provider.dart';
+import 'package:recook/viewmodels/saved_message_provider.dart';
 import 'package:recook/viewmodels/search_viewmodel.dart';
+import 'package:recook/viewmodels/textfield_validator_provider.dart';
 
 void main() {
   runApp(

@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:recook/models/recipe.dart';
-import 'package:recook/services/refresh_provider.dart';
 import 'package:recook/theme.dart';
 import 'package:provider/provider.dart';
 import 'package:recook/viewmodels/recipe_viewmodel.dart';
+import 'package:recook/viewmodels/refresh_provider.dart';
 
 class RoundedCardWithRecipe extends StatelessWidget {
   final Recipe savedRecipe;

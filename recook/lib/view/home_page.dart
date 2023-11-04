@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:recook/models/recipe.dart';
-import 'package:recook/services/chat_controller_provider.dart';
-import 'package:recook/services/saved_message_provider.dart';
 import 'package:recook/theme.dart';
 import 'package:recook/view/recipe_page.dart';
+import 'package:recook/viewmodels/chat_controller_provider.dart';
 import 'package:recook/viewmodels/recipe_viewmodel.dart';
+import 'package:recook/viewmodels/saved_message_provider.dart';
 import 'package:recook/widgets/navbar.dart';
 import 'package:recook/widgets/rounded_card.dart';
 
